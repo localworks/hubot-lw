@@ -122,7 +122,7 @@ var _makeChart = function _makeChart(data) {
 };
 
 module.exports = function (robot) {
-  new Cron('00 30 22 * * *', function () {
+  new Cron('00 30 11 * * *', function () {
     authTask().then(function (result) {
       return gaTask(result.access_token);
     }).then(function (respond) {
