@@ -6,6 +6,7 @@ var Chart = require('nchart');
 var Canvas = require('canvas');
 var exec = require('child_process').exec;
 var Cron = require('cron').CronJob;
+var Promise = require('promise')
 var key = JSON.parse(fs.readFileSync('./hubot-9c61d00b1b55.json', 'utf8'));
 var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, ['https://www.googleapis.com/auth/analytics'], null);
 var analytics = google.analytics('v3');
@@ -122,7 +123,7 @@ var _makeChart = function _makeChart(data) {
 };
 
 module.exports = function (robot) {
-  new Cron('00 30 11 * * *', function () {
+  new Cron('00 35 11 * * *', function () {
     authTask().then(function (result) {
       return gaTask(result.access_token);
     }).then(function (respond) {
