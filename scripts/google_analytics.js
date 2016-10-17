@@ -57,26 +57,29 @@ var _rowsToData = function _rowsToData(rows) {
         return item[0];
     });
     var datasets = [{
-        label: '今週セッション',
+        label: 'This week',
         data: thisWeek.map(function (item) {
             return item[1];
         }),
         backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)"
+        borderColor: "rgba(75,192,192,1)",
+        lineTension: 0
     }, {
-        label: '先週セッション',
+        label: '1 week ago',
         data: lastWeek.map(function (item) {
             return item[1];
         }),
         backgroundColor: "rgba(75,192,192,0)",
-        borderColor: "rgba(75,192,192,0.7)"
+        borderColor: "rgba(75,192,192,0.6)",
+        lineTension: 0
     }, {
-        label: '二週間前セッション',
+        label: '2 weeks ago',
         data: twoWeeksAgo.map(function (item) {
             return item[1];
         }),
         backgroundColor: "rgba(75,192,192,0)",
-        borderColor: "rgba(75,192,192,0.4)"
+        borderColor: "rgba(75,192,192,0.4)",
+        lineTension: 0
     }
     /*
     {
@@ -111,9 +114,6 @@ var _makeChart = function _makeChart(data) {
                     min: 0
                 }
             }]
-        },
-        legend: {
-            display: false
         }
     };
     chartNode.drawChart({
