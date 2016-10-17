@@ -70,7 +70,8 @@ var _rowsToData = function _rowsToData(rows) {
         }),
         backgroundColor: "rgba(75,192,192,0)",
         borderColor: "rgba(75,192,192,0.6)",
-        lineTension: 0
+        lineTension: 0,
+        borderDash: [5, 5]
     }];
 
     return {
