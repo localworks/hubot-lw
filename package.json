@@ -39,5 +39,8 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --presets es2015 --out-dir scripts/"
-  }
+  },
+  "engines": {
+    "node": "6.2.0"
+ }
 }
