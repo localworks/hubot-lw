@@ -49,15 +49,14 @@ var gaTask = function gaTask(token) {
 };
 
 var _rowsToData = function _rowsToData(rows) {
-    var thisWeek = rows.slice(-7);
-    var lastWeek = rows.slice(7, 14);
-    var twoWeeksAgo = rows.slice(0, 7);
+    var thisWeek = rows.slice(-14);
+    var twoWeeksAgo = rows.slice(0, 14);
 
     var labels = thisWeek.map(function (item) {
         return item[0];
     });
     var datasets = [{
-        label: 'This week',
+        label: 'From 2 weeks ago',
         data: thisWeek.map(function (item) {
             return item[1];
         }),
@@ -65,37 +64,14 @@ var _rowsToData = function _rowsToData(rows) {
         borderColor: "rgba(75,192,192,1)",
         lineTension: 0
     }, {
-        label: '1 week ago',
-        data: lastWeek.map(function (item) {
+        label: 'From 3 weeks ago',
+        data: twoWeeksAgo.map(function (item) {
             return item[1];
         }),
         backgroundColor: "rgba(75,192,192,0)",
         borderColor: "rgba(75,192,192,0.6)",
         lineTension: 0
-    }, {
-        label: '2 weeks ago',
-        data: twoWeeksAgo.map(function (item) {
-            return item[1];
-        }),
-        backgroundColor: "rgba(75,192,192,0)",
-        borderColor: "rgba(75,192,192,0.4)",
-        lineTension: 0
-    }
-    /*
-    {
-        label: '今週オーガニック',
-        data: thisWeek.map(item => item[2]),
-        backgroundColor: "rgba(205,187,151,0.2)",
-        borderColor: "rgba(205,187,151,1)",
-    },
-    {
-        label: '先週オーガニック',
-        data: lastWeek.map(item => item[2]),
-        backgroundColor: "rgba(205,187,151,0)",
-        borderColor: "rgba(205,187,151,0.5)",
-    }
-     */
-    ];
+    }];
 
     return {
         labels: labels,
