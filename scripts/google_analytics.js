@@ -154,7 +154,7 @@ var _main = function _main(robot) {
             console.log(JSON.stringify(respond));
 
             var msg = _sessionMsg(respond.rows);
-            robot.send({ room: room }, msg);
+            robot.send({ room: "#" + room }, msg);
             var data = _rowsToData(respond.rows);
             _makeChart(data);
         }).catch(function (err) {
