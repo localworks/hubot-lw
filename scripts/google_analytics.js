@@ -114,7 +114,7 @@ var _sessionMsg = function _sessionMsg(rows) {
 };
 
 var _makeChart = function _makeChart(data) {
-    var writeTo = './tmp/chart.png';
+    var writeTo = 'tmp/chart.png';
     var chartNode = new ChartjsNode(600, 300);
 
     var options = {
@@ -134,6 +134,7 @@ var _makeChart = function _makeChart(data) {
         chartNode.getImageBuffer('image/png');
         chartNode.getImageStream('image/png');
         chartNode.writeImageToFile('image/png', writeTo);
+        chartNode.destroy();
 
         var cmd = 'curl -F file=@' + writeTo + ' -F channels=' + room + ' -F token=' + process.env.HUBOT_SLACK_TOKEN + ' https://slack.com/api/files.upload';
         exec(cmd, function (err, stdout, stderr) {
@@ -164,7 +165,7 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 35 13 * * *', _main(robot)).start();
+    new Cron('00 05 14 * * *', _main(robot)).start();
 
-    //robot.respond(/ga$/i, _main(robot))
+//    robot.respond(/ga$/i, _main(robot));
 };
