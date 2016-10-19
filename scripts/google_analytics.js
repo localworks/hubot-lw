@@ -154,7 +154,7 @@ var _main = function _main(robot) {
             console.log(JSON.stringify(respond));
 
             var msg = _sessionMsg(respond.rows);
-            robot.send({ room: "#" + room }, msg);
+            robot.send({ room: room }, msg);
             var data = _rowsToData(respond.rows);
             _makeChart(data);
         }).catch(function (err) {
@@ -164,7 +164,7 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 25 12 * * *', _main(robot)).start();
+    new Cron('00 20 13 * * *', _main(robot)).start();
 
     //robot.respond(/ga$/i, _main(robot))
 };
