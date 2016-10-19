@@ -114,7 +114,7 @@ var _sessionMsg = function _sessionMsg(rows) {
 };
 
 var _makeChart = function _makeChart(data) {
-    var writeTo = '/tmp/chart.png';
+    var writeTo = './tmp/chart.png';
     var chartNode = new ChartjsNode(600, 300);
 
     var options = {
@@ -164,7 +164,7 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 20 13 * * *', _main(robot)).start();
+    new Cron('00 35 13 * * *', _main(robot)).start();
 
     //robot.respond(/ga$/i, _main(robot))
 };
