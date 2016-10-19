@@ -169,7 +169,7 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 23 18 * * *', _main(robot)).start();
+    new Cron('00 30 07 * * *', _main(robot)).start();
 
 //    robot.respond(/ga$/i, _main(robot));
 };
