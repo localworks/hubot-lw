@@ -7,12 +7,21 @@ var exec = require('child_process').exec;
 var Cron = require('cron').CronJob;
 var Promise = require('promise');
 var _ = require('lodash');
-var key = JSON.parse(fs.readFileSync('./hubot-9c61d00b1b55.json', 'utf8'));
-var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, ['https://www.googleapis.com/auth/analytics'], null);
-var analytics = google.analytics('v3');
+var cloudinary = require('cloudinary');
+
 var viewId = '124954579'; // 設定画面で確認した「ビューID」
 var metrics = ['ga:sessions', 'ga:organicSearches'];
 var room = 'traffic';
+
+var key = JSON.parse(fs.readFileSync('./hubot-9c61d00b1b55.json', 'utf8'));
+var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, ['https://www.googleapis.com/auth/analytics'], null);
+var analytics = google.analytics('v3');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
+});
 
 var authTask = function authTask() {
     return new Promise(function (resolve, reject) {
@@ -113,8 +122,8 @@ var _sessionMsg = function _sessionMsg(rows) {
     return msg;
 };
 
-var _makeChart = function _makeChart(data) {
-    var writeTo = '/tmp/chart.png';
+var _makeChart = function _makeChart(data, robot) {
+    var writeTo = 'tmp/chart.png';
     var chartNode = new ChartjsNode(600, 300);
 
     var options = {
@@ -131,17 +140,14 @@ var _makeChart = function _makeChart(data) {
         data: data,
         options: options
     }).then(function () {
-        chartNode.getImageBuffer('image/png');
-        chartNode.destroy();
-
-        var cmd = 'curl -F file=@' + writeTo + ' -F channels=' + room + ' -F token=' + process.env.HUBOT_SLACK_TOKEN + ' https://slack.com/api/files.upload';
-        exec(cmd, function (err, stdout, stderr) {
-            if (err) {
-                console.log(err.name + ': ' + err.message);
-            } else {
-                console.log('success!');
-            }
+        chartNode.getImageBuffer('image/png').then(function (buffer) {
+            var uri = 'data:image/png;base64,' + buffer.toString('base64');
+            cloudinary.uploader.upload(uri, function (result) {
+                console.log(result);
+                robot.send({ room: room }, result.secure_url);
+            });
         });
+        chartNode.destroy();
     });
 };
 
@@ -155,7 +161,7 @@ var _main = function _main(robot) {
             var msg = _sessionMsg(respond.rows);
             robot.send({ room: room }, msg);
             var data = _rowsToData(respond.rows);
-            _makeChart(data);
+            _makeChart(data, robot);
         }).catch(function (err) {
             console.log(err);
         });
@@ -163,7 +169,7 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 45 15 * * *', _main(robot)).start();
+    new Cron('00 20 18 * * *', _main(robot)).start();
 
 //    robot.respond(/ga$/i, _main(robot));
 };

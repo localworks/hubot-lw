@@ -8,6 +8,7 @@
     "babel-polyfill": "^6.16.0",
     "chart.js": "^2.3.0",
     "chartjs-node": "^1.0.5",
+    "cloudinary": "^1.4.3",
     "cron": "^1.1.1",
     "githubot": "^1.0.1",
     "googleapis": "^14.0.0",
