@@ -28,7 +28,7 @@
     "promise": "^7.1.1"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "6.2.0"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -39,8 +39,5 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --presets es2015 --out-dir scripts/"
-  },
-  "engines": {
-    "node": "6.2.0"
- }
+  }
 }
