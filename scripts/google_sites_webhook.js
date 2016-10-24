@@ -1,36 +1,37 @@
-const elasticsearch = require('elasticsearch')
+'use strict';
 
-const indexName = 'search'
-const typeName = 'articles'
+var elasticsearch = require('elasticsearch');
 
-const client = new elasticsearch.Client({
+var indexName = 'search';
+var typeName = 'articles';
+
+var client = new elasticsearch.Client({
     host: process.env.HUBOT_LW_ELASTICSEARCH,
     log: 'trace'
 });
 
-module.exports = (hubot) => {
-    robot.router.post('/google-sites/webhook', (req, res) => {
-        let payload = JSON.parse(req.body.payload)
-        console.log(payload)
+module.exports = function (robot) {
+    robot.router.post('/google-sites/webhook', function (req, res) {
+        var payload = JSON.parse(req.body.payload);
+        console.log(payload);
 
         client.update({
             index: indexName,
             type: typeName,
             id: payload.id,
-            body:
-            {
+            body: {
                 doc: {
                     url: payload.url,
                     title: payload.title,
                     article: payload.article
                 }
             }
-        }, (error) => {
+        }, function (error) {
             if (error) {
-                console.log(error.message)
+                console.log(error.message);
             } else {
-                console.log('google sites webhook: update ' + id)
+                console.log('google sites webhook: update ' + id);
             }
-        })
-    })
-}
+        });
+    });
+};
