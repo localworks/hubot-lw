@@ -30,8 +30,10 @@ module.exports = function (robot) {
         }, function (error) {
             if (error) {
                 console.log(error.message);
+                res.send('NG');
             } else {
                 console.log('google sites webhook: update ' + payload.id);
+                res.send('OK');
             }
         });
     });
