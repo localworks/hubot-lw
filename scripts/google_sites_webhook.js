@@ -31,7 +31,7 @@ module.exports = function (robot) {
             if (error) {
                 console.log(error.message);
             } else {
-                console.log('google sites webhook: update ' + id);
+                console.log('google sites webhook: update ' + payload.id);
             }
         });
     });
