@@ -12,8 +12,8 @@ var client = new elasticsearch.Client({
 
 module.exports = function (robot) {
     robot.router.post('/google-sites/webhook', function (req, res) {
+        console.log(req.body.payload);
         var payload = JSON.parse(req.body.payload);
-        console.log(payload);
 
         client.update({
             index: indexName,
@@ -24,7 +24,8 @@ module.exports = function (robot) {
                     url: payload.url,
                     title: payload.title,
                     article: payload.article
-                }
+                },
+                doc_as_upsert: true
             }
         }, function (error) {
             if (error) {
