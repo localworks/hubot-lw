@@ -168,8 +168,13 @@ module.exports = function (hubot) {
 
             var messages = results.map(function (result) {
                 var searchResult = result._source.title + ': ' + result._source.url;
-                var snippet = result.highlight.article[0];
-                snippet = '\n>' + snippet.replace(/\n/g, '\n>');
+
+                var snippet = '';
+                if (result.highlight) {
+                    snippet = result.highlight.article[0];
+                    snippet = '\n>' + snippet.replace(/\n/g, '\n>');
+                }
+
                 return searchResult + snippet;
             });
             res.send(messages.join('\n'));
