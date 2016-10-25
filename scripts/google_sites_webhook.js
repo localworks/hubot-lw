@@ -23,7 +23,8 @@ module.exports = function (robot) {
                 doc: {
                     url: payload.url,
                     title: payload.title,
-                    article: payload.article
+                    article: payload.article,
+                    room_tag: 'operation'
                 },
                 doc_as_upsert: true
             }
