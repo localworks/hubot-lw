@@ -53,7 +53,8 @@ var _register = function _register(res, searchResult, url, title, article) {
             body: {
                 url: url,
                 title: title,
-                article: article
+                article: article,
+                room_tag: 'dev'
             }
         }, function (error) {
             s;
@@ -70,7 +71,8 @@ var _register = function _register(res, searchResult, url, title, article) {
                 doc: {
                     url: url,
                     title: title,
-                    article: article
+                    article: article,
+                    room_tag: ''
                 }
             }
         }, function (error) {
@@ -131,14 +133,32 @@ module.exports = function (hubot) {
 
     hubot.respond(/search query (.+)$/i, function (res) {
         var query = res.match[1];
+        var room = res.message.user.room;
+
+        var mustQuery = {
+            multi_match: {
+                query: query,
+                fields: ['title', 'article']
+            } };
+
+        var shouldQuery = { match: { room_tag: room } };
 
         client.search({
             index: indexName,
             type: typeName,
             body: {
                 query: {
-                    query_string: { query: query }
-                }
+                    bool: {
+                        must: mustQuery,
+                        should: shouldQuery
+                    }
+                },
+                highlight: {
+                    fields: { article: {} },
+                    pre_tags: ["*"],
+                    post_tags: ["*"]
+                },
+                size: 3
             }
         }, function (error, data) {
             console.log(data);
@@ -147,7 +167,10 @@ module.exports = function (hubot) {
             console.log(data.hits.hits);
 
             var messages = results.map(function (result) {
-                return result._source.title + ': ' + result._source.url;
+                var searchResult = result._source.title + ': ' + result._source.url;
+                var snippet = result.highlight.article[0];
+                snippet = '\n>' + snippet.replace(/\n/g, '\n>');
+                return searchResult + snippet;
             });
             res.send(messages.join('\n'));
         });
