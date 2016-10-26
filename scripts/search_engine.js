@@ -72,7 +72,7 @@ var _register = function _register(res, searchResult, url, title, article) {
                     url: url,
                     title: title,
                     article: article,
-                    room_tag: ''
+                    room_tag: 'dev'
                 }
             }
         }, function (error) {
