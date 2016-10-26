@@ -1,9 +1,7 @@
 'use strict';
 
-var fs = require('fs');
 var google = require('googleapis');
 var ChartjsNode = require('chartjs-node');
-var exec = require('child_process').exec;
 var Cron = require('cron').CronJob;
 var Promise = require('promise');
 var _ = require('lodash');
@@ -13,8 +11,7 @@ var viewId = '124954579'; // 設定画面で確認した「ビューID」
 var metrics = ['ga:sessions', 'ga:organicSearches'];
 var room = 'traffic';
 
-var key = JSON.parse(fs.readFileSync('./hubot-9c61d00b1b55.json', 'utf8'));
-var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, ['https://www.googleapis.com/auth/analytics'], null);
+var jwtClient = new google.auth.JWT(process.env.GA_CLIENT_EMAIL, null, process.env.GA_PRIVATE_KEY, ['https://www.googleapis.com/auth/analytics'], null);
 var analytics = google.analytics('v3');
 
 cloudinary.config({
@@ -144,7 +141,7 @@ var _makeChart = function _makeChart(data, robot) {
             var uri = 'data:image/png;base64,' + buffer.toString('base64');
             cloudinary.uploader.upload(uri, function (result) {
                 console.log(result);
-                robot.send({ room: room }, result.secure_url);
+                robot.send(room, result.secure_url);
             });
         });
         chartNode.destroy();
@@ -170,6 +167,4 @@ var _main = function _main(robot) {
 
 module.exports = function (robot) {
     new Cron('00 30 07 * * *', _main(robot)).start();
-
-//    robot.respond(/ga$/i, _main(robot));
 };
