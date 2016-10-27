@@ -40,7 +40,6 @@ var searchUsernamePromise = function searchUsernamePromise(username) {
 };
 
 module.exports = function (robot) {
-    var dicPath = 'node_modules/kuromoji/dict/';
 
     robot.router.delete('/reset-slack-log/webhook', function (req, res) {
         client.deleteByQuery({
