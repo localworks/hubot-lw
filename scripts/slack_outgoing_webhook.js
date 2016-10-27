@@ -59,7 +59,6 @@ module.exports = function (robot) {
     });
 
     robot.router.post('/slack-outgoing/webhook', function (req, res) {
-        console.log(req.body);
         var body = req.body;
 
         var channelName = body.channel_name;
@@ -75,7 +74,7 @@ module.exports = function (robot) {
                 params: {
                     val: text
                 },
-                script: "ctx._source.logs += val",
+                script: "ctx._source.logs+=val",
                 upsert: {
                     username: userName,
                     logs: [text]
