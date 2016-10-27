@@ -84,7 +84,7 @@ module.exports = function (robot) {
             if (error) {
                 console.log(error);
             } else {
-                console.log('success for update.');
+                console.log('success for update the data of ' + userName + '.');
             }
         });
     });
