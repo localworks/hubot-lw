@@ -23,12 +23,19 @@ var builderPromise = function builderPromise(builder) {
     });
 };
 
-var searchUsernamePromise = function searchUsernamePromise(username) {
+var searchUsernamePromise = function searchUsernamePromise(username, room) {
     return new Promise(function (resolve, reject) {
-        client.get({
+        client.search({
             index: 'slack',
             type: 'logs',
-            id: username
+            body: {
+                sort: [{ timestamp: "desc" }],
+                query: {
+                    bool: {
+                        must: [{ match: { username: username } }, { match: { channel_name: room } }]
+                    }
+                }
+            }
         }, function (error, result) {
             if (error) {
                 reject(error);
@@ -66,33 +73,31 @@ module.exports = function (robot) {
         var timestamp = body.timestamp * 1000;
         var text = body.text;
 
-        client.update({
+        client.index({
             index: 'slack',
             type: 'logs',
-            id: userName,
             body: {
-                params: {
-                    val: text
-                },
-                script: "ctx._source.logs = ctx._source.logs + val",
-                upsert: {
-                    username: userName,
-                    logs: [text]
-                }
+                username: userName,
+                channel_name: channelName,
+                timestamp: timestamp,
+                log: text
             }
         }, function (error) {
             if (error) {
                 console.log(error);
+                res.send('{}');
             } else {
                 console.log('success for update the data of ' + userName + '.');
+                res.send('{}');
             }
         });
     });
 
     robot.respond(/recommend/i, function (res) {
         var username = res.message.user.name;
+        var room = res.message.user.room;
 
-        searchUsernamePromise(username).then(function (data) {
+        searchUsernamePromise(username, room).then(function (data) {
             console.log(data);
             var source = data._source;
 
