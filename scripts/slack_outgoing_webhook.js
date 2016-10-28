@@ -32,7 +32,7 @@ var searchUsernamePromise = function searchUsernamePromise(username, room) {
                 sort: [{ timestamp: "desc" }],
                 query: {
                     bool: {
-                        must: [{ match: { username: username } }, { match: { channel_name: room } }]
+                        must: [{ match: { username: username } }, { match: { channel: room } }]
                     }
                 }
             }
@@ -40,7 +40,7 @@ var searchUsernamePromise = function searchUsernamePromise(username, room) {
             if (error) {
                 reject(error);
             } else {
-                resolove(result);
+                resolve(result);
             }
         });
     });
@@ -68,7 +68,7 @@ module.exports = function (robot) {
     robot.router.post('/slack-outgoing/webhook', function (req, res) {
         var body = req.body;
 
-        var channelName = body.channel_name;
+        var channel = body.channel_id;
         var userName = body.user_name;
         var timestamp = body.timestamp * 1000;
         var text = body.text;
@@ -78,7 +78,7 @@ module.exports = function (robot) {
             type: 'logs',
             body: {
                 username: userName,
-                channel_name: channelName,
+                channel: channel,
                 timestamp: timestamp,
                 log: text
             }
