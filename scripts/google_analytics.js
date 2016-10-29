@@ -11,7 +11,7 @@ var viewId = '124954579'; // 設定画面で確認した「ビューID」
 var metrics = ['ga:sessions', 'ga:organicSearches'];
 var room = 'traffic';
 
-var jwtClient = new google.auth.JWT(process.env.GA_CLIENT_EMAIL, null, process.env.GA_PRIVATE_KEY, ['https://www.googleapis.com/auth/analytics'], null);
+var jwtClient = new google.auth.JWT(process.env.GA_CLIENT_EMAIL, null, process.env.GA_PRIVATE_KEY.replace(/\\n/g, '\n'), ['https://www.googleapis.com/auth/analytics'], null);
 var analytics = google.analytics('v3');
 
 cloudinary.config({
