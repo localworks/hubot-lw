@@ -166,11 +166,5 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 30 07 * * *', _main(robot)).start();
-
-    authTask().then(function (result) {
-        return gaTask(result.access_token);
-    }).catch(function (err) {
-        console.log(err);
-    });
+    new Cron('00 33 10 * * *', _main(robot)).start();
 };
