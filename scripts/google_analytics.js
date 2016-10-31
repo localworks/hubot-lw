@@ -141,7 +141,7 @@ var _makeChart = function _makeChart(data, robot) {
             var uri = 'data:image/png;base64,' + buffer.toString('base64');
             cloudinary.uploader.upload(uri, function (result) {
                 console.log(result);
-                robot.send(room, result.secure_url);
+                robot.send({ room: room }, result.secure_url);
             });
         });
         chartNode.destroy();
@@ -166,5 +166,5 @@ var _main = function _main(robot) {
 };
 
 module.exports = function (robot) {
-    new Cron('00 33 10 * * *', _main(robot)).start();
+    new Cron('00 30 07 * * *', _main(robot)).start();
 };
