@@ -93,6 +93,7 @@ module.exports = function (hubot) {
 
             var title = $('h1.itemsShowHeaderTitle_title').text();
             var article = $('section.markdownContent').text();
+            article = article.replace(/\n\n+/g, '\n');
 
             return _register(searchResult, url, title, article);
         }).then(function (msg) {
@@ -111,6 +112,7 @@ module.exports = function (hubot) {
 
             var title = $('h1.entry-title').text().replace(/\s+/g, '');
             var article = $('.entry-content').text();
+            article = article.replace(/\n\n+/g, '\n');
 
             _register(res, searchResult, url, title, article);
         }).catch(function (err) {
@@ -127,6 +129,7 @@ module.exports = function (hubot) {
 
             var title = $('title').text();
             var article = $('.section').text();
+            article = article.replace(/\n\n+/g, '\n');
 
             _register(res, searchResult, url, title, article);
         }).catch(function (err) {
@@ -158,8 +161,8 @@ module.exports = function (hubot) {
                 },
                 highlight: {
                     fields: { article: {} },
-                    pre_tags: ["*"],
-                    post_tags: ["*"]
+                    pre_tags: [" *"],
+                    post_tags: ["* "]
                 },
                 size: 3
             }
