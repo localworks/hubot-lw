@@ -1,5 +1,9 @@
 'use strict';
 
+var _map2 = require('lodash/map');
+
+var _map3 = _interopRequireDefault(_map2);
+
 var _elasticsearch = require('elasticsearch');
 
 var _elasticsearch2 = _interopRequireDefault(_elasticsearch);
@@ -34,7 +38,8 @@ var searchUsernamePromise = function searchUsernamePromise(username, room) {
                     bool: {
                         must: [{ match: { username: username } }, { match: { channel: room } }]
                     }
-                }
+                },
+                size: 5
             }
         }, function (error, result) {
             if (error) {
@@ -98,16 +103,20 @@ module.exports = function (robot) {
         var room = res.message.user.room;
 
         searchUsernamePromise(username, room).then(function (data) {
-            console.log(data);
-            var source = data._source;
+            console.log(data.hits.hits);
+            var source = data.hits.hits;
 
             client.search({
                 index: 'search',
                 type: 'articles',
                 body: {
-                    more_like_this: {
-                        fields: ['title', 'article'],
-                        like: source.logs
+                    query: {
+                        more_like_this: {
+                            fields: ['title', 'article'],
+                            like: (0, _map3.default)(source, function (x) {
+                                return x._source.log;
+                            })
+                        }
                     },
                     size: 3
                 }
