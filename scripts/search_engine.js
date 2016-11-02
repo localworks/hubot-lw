@@ -45,41 +45,42 @@ var _promiseCheerio = function _promiseCheerio(url) {
     });
 };
 
-var _register = function _register(res, searchResult, url, title, article) {
-    if (searchResult.hits.hits.length == 0) {
-        client.index({
-            index: indexName,
-            type: typeName,
-            body: {
-                url: url,
-                title: title,
-                article: article,
-                room_tag: 'dev'
-            }
-        }, function (error) {
-            s;
-            if (error) throw new Error(error.message);
-            res.send('\u767B\u9332\u3057\u307E\u3057\u305F ' + url);
-        });
-    } else {
-        var id = searchResult.hits.hits[0]._id;
-        client.update({
-            index: indexName,
-            type: typeName,
-            id: id,
-            body: {
-                doc: {
+var _register = function _register(searchResult, url, title, article) {
+    return new Promise(function (resolve, reject) {
+        if (searchResult.hits.hits.length == 0) {
+            client.index({
+                index: indexName,
+                type: typeName,
+                body: {
                     url: url,
                     title: title,
                     article: article,
                     room_tag: 'dev'
                 }
-            }
-        }, function (error) {
-            if (error) throw new Error(error.message);
-            res.send('\u66F4\u65B0\u3057\u307E\u3057\u305F ' + url);
-        });
-    }
+            }, function (error) {
+                if (error) throw new Error(error.message);
+                resolve('\u767B\u9332\u3057\u307E\u3057\u305F ' + url);
+            });
+        } else {
+            var id = searchResult.hits.hits[0]._id;
+            client.update({
+                index: indexName,
+                type: typeName,
+                id: id,
+                body: {
+                    doc: {
+                        url: url,
+                        title: title,
+                        article: article,
+                        room_tag: 'dev'
+                    }
+                }
+            }, function (error) {
+                if (error) throw new Error(error.message);
+                resolve('\u66F4\u65B0\u3057\u307E\u3057\u305F ' + url);
+            });
+        }
+    });
 };
 
 module.exports = function (hubot) {
@@ -93,7 +94,9 @@ module.exports = function (hubot) {
             var title = $('h1.itemsShowHeaderTitle_title').text();
             var article = $('section.markdownContent').text();
 
-            _register(res, searchResult, url, title, article);
+            return _register(searchResult, url, title, article);
+        }).then(function (msg) {
+            res.send(msg);
         }).catch(function (err) {
             console.log(err);
         });
