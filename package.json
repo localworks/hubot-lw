@@ -52,6 +52,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --presets es2015 --out-dir scripts/",
-    "test": "mocha --timeout 20000 --require coffee-script/register"
+    "test": "mocha --timeout 20000 --require coffee-script/register",
+    "start": "./bin/hubot -n tarabot"
   }
 }
