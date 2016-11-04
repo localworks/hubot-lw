@@ -52,35 +52,39 @@ var searchUsernamePromise = function searchUsernamePromise(username, room) {
 };
 
 var recommendByData = function recommendByData(data) {
-    console.log(data.hits.hits);
-    var source = data.hits.hits;
-
-    client.search({
-        index: 'search',
-        type: 'articles',
-        body: {
-            query: {
-                more_like_this: {
-                    fields: ['title', 'article'],
-                    like: (0, _map3.default)(source, function (x) {
-                        return x._source.log;
-                    })
-                }
-            },
-            size: 3
-        }
-    }, function (error, data) {
-        if (error) throw new Error(error);
-
-        console.log(data);
-
-        var results = data.hits.hits;
+    return new Promise(function (resolve, reject) {
         console.log(data.hits.hits);
+        var source = data.hits.hits;
 
-        var messages = results.map(function (result) {
-            return result._source.title + ': ' + result._source.url;
+        client.search({
+            index: 'search',
+            type: 'articles',
+            body: {
+                query: {
+                    more_like_this: {
+                        fields: ['title', 'article'],
+                        like: (0, _map3.default)(source, function (x) {
+                            return x._source.log;
+                        })
+                    }
+                },
+                size: 3
+            }
+        }, function (error, data) {
+            if (error) {
+                reject(error);
+            } else {
+                console.log(data);
+
+                var results = data.hits.hits;
+                console.log(data.hits.hits);
+
+                var messages = results.map(function (result) {
+                    return result._source.title + ': ' + result._source.url;
+                });
+                resolve(messages.join('\n'));
+            }
         });
-        res.send(messages.join('\n'));
     });
 };
 
@@ -135,7 +139,9 @@ module.exports = function (robot) {
         var username = res.message.user.name;
         var room = res.message.user.room;
 
-        searchUsernamePromise(username, room).then(recommendByData).catch(function (error) {
+        searchUsernamePromise(username, room).then(recommendByData).then(function (message) {
+            res.send(message);
+        }).catch(function (error) {
             console.log(error);
         });
     });
@@ -144,7 +150,9 @@ module.exports = function (robot) {
         var username = res.message.user.name;
         var room = res.message.user.room;
 
-        searchUsernamePromise(username, room).then(recommendByData).catch(function (error) {
+        searchUsernamePromise(username, room).then(recommendByData).then(function (message) {
+            res.send(message);
+        }).catch(function (error) {
             console.log(error);
         });
     });
