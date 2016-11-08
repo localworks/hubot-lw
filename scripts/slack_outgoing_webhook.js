@@ -77,11 +77,16 @@ var recommendByData = function recommendByData(data) {
                 console.log(data);
 
                 var results = data.hits.hits;
-                console.log(data.hits.hits);
+                console.log(results);
 
                 var messages = results.map(function (result) {
                     return result._source.title + ': ' + result._source.url;
                 });
+
+                if (results.length == 0) {
+                    messages = ['推薦できませんでした。'];
+                }
+
                 resolve(messages.join('\n'));
             }
         });
