@@ -1,5 +1,4 @@
-//const repo = 'localworks/localworks'
-const repo = 'TeraBytesMemory/sandbox'
+const repo = 'localworks/localworks'
 const urlPrefix = `https://api.github.com/repos/${repo}`
 
 module.exports = robot => {
@@ -31,9 +30,6 @@ module.exports = robot => {
                 commitMessage = commitMessage + `>${commit.commit.message.replace(/\n/g, '\n>')}`
                 return commitMessage
             })
-
-            // 関係者に通知
-            // let comitters = commits.map(commit => commit.commit.comitter.name)
 
             res.send(messages.join('\n'))
 
