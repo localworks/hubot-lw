@@ -144,7 +144,7 @@ var _makeChart = function _makeChart(data, robot) {
                 robot.send({ room: room }, result.secure_url);
             });
         });
-        chartNode.destroy();
+        // chartNode.destroy(); よくわからないけどここを消すと画像が出てくる
     });
 };
 
