@@ -33,10 +33,9 @@ module.exports = (robot) ->
                  null
 
       amount = if match[2].indexOf('+') == 0
-                 parseInt(match[2].length/2)
+                 1
                else if match[2].indexOf('-') == 0
-                 -parseInt(match[2].length/2)
-
+                 -1
 
       old_score = robot.brain.get member
       robot.brain.set member, old_score + amount
@@ -45,7 +44,7 @@ module.exports = (robot) ->
         new_score = robot.brain.get member
         msg.send "#{member} #{new_score}pt"
       else
-        msg.send '名前ミスってるぞ。笑'
+        msg.send '名前ミスってる。笑'
 
   robot.hear /^score report$/i, (msg) ->
     rankers = orderByScore()
@@ -55,15 +54,15 @@ module.exports = (robot) ->
 
   reportRanking = () ->
     rankers = orderByScore()
-    heigh_rankers = rankers[0..4]
+    heigh_rankers = rankers[0..2]
 
     for ranker, index in heigh_rankers
-      msg.send room: '#happy', "#{index + 1}位 #{ranker.name} -> #{if ranker.score then ranker.score else 0}pt"
+      msg.send room: 'happy', "#{index + 1}位 #{ranker.name} -> #{if ranker.score then ranker.score else 0}pt"
 
     lowest_ranker = rankers[rankers.length - 1]
 
     if lowest_ranker.score < 0
-      msg.send room: '#happy', "#{lowest_ranker.name} 来週がんばれ"
+      msg.send room: 'happy', "#{lowest_ranker.name} 来週がんばれ"
 
     resetScore()
 
